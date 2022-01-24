@@ -1083,12 +1083,7 @@ void gmx::LegacySimulator::do_md()
                 hrexEnergies[repl][repl] = enerd->term[F_EPOT];
 
                 if (DOMAINDECOMP(cr)) {
-                    real tmp[nrepl];
-                    MPI_Reduce(hrexEnergies[repl], tmp, nrepl, GMX_MPI_REAL, MPI_SUM, 0, cr->mpi_comm_mysim);
-                    for (i = 0; i < nrepl; i++) {
-                        // printf("Step %ld U_%d(x_%d) RANK %d POT_LOCAL %#.8g POT_REDUCE %#.8g\n", step, repl, i, cr->sim_nodeid, hrexEnergies[repl][i], tmp[i]);
-                        hrexEnergies[repl][i] = tmp[i];
-                    }
+                    MPI_Allreduce(MPI_IN_PLACE, hrexEnergies[repl], nrepl, GMX_MPI_REAL, MPI_SUM, cr->mpi_comm_mysim);
                 }
 
                 if (MASTER(cr)) {
@@ -1105,7 +1100,7 @@ void gmx::LegacySimulator::do_md()
                         fprintf(fp_fephrex, " %#.8g", hrexDeltaEnergies[i][repl]);
                     }
                     real vol   = det(state_global->box);
-                    real press = 1.0;
+                    real press = ir->ref_p[ZZ][ZZ];
                     real pV    = vol * press / PRESFAC;
                     fprintf(fp_fephrex, " %#.8g\n", pV);
                     fflush(fp_fephrex);
