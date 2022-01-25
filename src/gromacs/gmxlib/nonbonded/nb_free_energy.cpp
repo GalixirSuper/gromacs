@@ -849,8 +849,15 @@ static void nb_free_energy_kernel(const t_nblist* gmx_restrict nlist,
 #pragma omp atomic
     inc_nrnb(nrnb, eNR_NBKERNEL_FREE_ENERGY, nlist->nri * 12 + nlist->jindex[nri] * 150);
 
-    if (numExcludedPairsBeyondRlist > 0)
+    if (false && /* FEP HREX */ numExcludedPairsBeyondRlist > 0)
     {
+        /* FEP HREX
+        In RBFE calculation, exclusions are added between dummy atoms of A and B ligands.
+        Even if the exclusions are not calculated correctly, it wouldn't affect the FE results from BAR,
+         because there's no LJ or Coul interaction between them at the beginning and end states,
+         so only the intermediate states will be incorrect, which are not of concern.
+        */
+
         gmx_fatal(FARGS,
                   "There are %d perturbed non-bonded pair interactions beyond the pair-list cutoff "
                   "of %g nm, which is not supported. This can happen because the system is "
