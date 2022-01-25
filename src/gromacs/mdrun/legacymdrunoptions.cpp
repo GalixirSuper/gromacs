@@ -161,7 +161,6 @@ int LegacyMdrunOptions::updateFromCommandLine(int argc, char** argv, ArrayRef<co
     if(fep_hrex){
       if(replExParams.exchangeInterval==0) gmx_fatal(FARGS,"-fephrex requires -replex");
       if(replExParams.numExchanges!=0) gmx_fatal(FARGS,"-fephrex not compatible with -nex");
-      if(domdecOptions.dlbOption != DlbOption::no) gmx_fatal(FARGS,"-fephrex requires -dlb no");
     }
     /* END FEP HREX */
 

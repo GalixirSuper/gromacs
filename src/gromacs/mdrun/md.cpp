@@ -155,6 +155,7 @@
 #include "unistd.h"
 #include "gromacs/fileio/gmxfio.h"
 #include "gromacs/math/units.h"
+#include "gromacs/domdec/domdec_internal.h"
 
 extern bool fep_hrex;
 /* END FEP HREX */
@@ -721,6 +722,9 @@ void gmx::LegacySimulator::do_md()
         {
             if (nrepl % 2 != 0)
                 gmx_fatal(FARGS, "Number of replicas must be even for -fephrex");
+            if (cr->nnodes > 1 && cr->dd->comm->dlbState != DlbState::offUser) {
+                gmx_fatal(FARGS, "Dynamic load balancing must be disabled (-dlb no) for -fephrex");
+            }
 
             std::string fn_fephrex(opt2fn("-dhdl", nfile, fnm));
             fn_fephrex = fn_fephrex.replace(fn_fephrex.length() - 3, 3, "csv");
