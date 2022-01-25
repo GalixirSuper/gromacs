@@ -152,6 +152,7 @@
 #include "shellfc.h"
 
 /* FEP HREX */
+#include "unistd.h"
 #include "gromacs/fileio/gmxfio.h"
 #include "gromacs/math/units.h"
 
@@ -732,6 +733,11 @@ void gmx::LegacySimulator::do_md()
             fprintf(fp_fephrex, "    pV\n");
         }
     }
+
+    char hostname[256];
+    gethostname(hostname, sizeof(hostname));
+    printf("SIM %d RANK %d PID %d on %s. Wait for 10 seconds\n", ms->simulationIndex_, cr->nodeid, getpid(), hostname);
+    usleep(10000000);
     /* END FEP HREX */
 
 
