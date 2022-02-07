@@ -153,6 +153,7 @@
 
 /* FEP HREX */
 #include "unistd.h"
+#include "limits"
 #include "gromacs/fileio/gmxfio.h"
 #include "gromacs/math/units.h"
 #include "gromacs/domdec/domdec_internal.h"
@@ -1006,7 +1007,8 @@ void gmx::LegacySimulator::do_md()
                          GMX_FORCE_ENERGY |
                          GMX_FORCE_DHDL |
                          GMX_FORCE_NS,
-                         ddBalanceRegionHandler);
+                         ddBalanceRegionHandler,
+                         false);
 
                 hrexEnergies[repl][hrexIndexes[repl]] = hrex_enerd.term[F_EPOT];
             }
@@ -1103,7 +1105,10 @@ void gmx::LegacySimulator::do_md()
                     }
 
                     for (i = 0; i < nrepl; i++) {
-                        hrexDeltaEnergies[i][repl] = hrexEnergies[i][repl] - hrexEnergies[repl][repl];
+                        if (std::isfinite(hrexEnergies[i][repl]) && std::isfinite(hrexEnergies[repl][repl]))
+                            hrexDeltaEnergies[i][repl] = hrexEnergies[i][repl] - hrexEnergies[repl][repl];
+                        else
+                            hrexDeltaEnergies[i][repl] = std::numeric_limits<real>::max();
                     }
 
                     fprintf(fp_fephrex, "%.4f %#.8g", t, hrexEnergies[repl][repl]);
