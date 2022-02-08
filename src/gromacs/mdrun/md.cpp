@@ -153,7 +153,6 @@
 
 /* FEP HREX */
 #include "unistd.h"
-#include "limits"
 #include "gromacs/fileio/gmxfio.h"
 #include "gromacs/math/units.h"
 #include "gromacs/domdec/domdec_internal.h"
@@ -1108,7 +1107,7 @@ void gmx::LegacySimulator::do_md()
                         if (std::isfinite(hrexEnergies[i][repl]) && std::isfinite(hrexEnergies[repl][repl]))
                             hrexDeltaEnergies[i][repl] = hrexEnergies[i][repl] - hrexEnergies[repl][repl];
                         else
-                            hrexDeltaEnergies[i][repl] = std::numeric_limits<real>::max();
+                            hrexDeltaEnergies[i][repl] = 1e10; // a value large enough
                     }
 
                     fprintf(fp_fephrex, "%.4f %#.8g", t, hrexEnergies[repl][repl]);
