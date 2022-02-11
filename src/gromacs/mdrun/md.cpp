@@ -738,9 +738,10 @@ void gmx::LegacySimulator::do_md()
         }
     }
 
-//    char hostname[256];
-//    gethostname(hostname, sizeof(hostname));
-//    printf("SIM %d RANK %d/%d PID %d on %s. Wait for 10 seconds\n", ms->simulationIndex_, cr->sim_nodeid, cr->nnodes, getpid(), hostname);
+//    if (ms != nullptr)
+//        printf("SIM %d RANK %d/%d PID %d. Wait for 10 seconds\n", ms->simulationIndex_, cr->sim_nodeid, cr->nnodes, getpid());
+//    else
+//        printf("RANK %d/%d PID %d. Wait for 10 seconds\n", cr->sim_nodeid, cr->nnodes, getpid());
 //    usleep(10000000);
 
     /* END FEP HREX */

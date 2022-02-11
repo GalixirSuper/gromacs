@@ -849,7 +849,7 @@ static void nb_free_energy_kernel(const t_nblist* gmx_restrict nlist,
 #pragma omp atomic
     inc_nrnb(nrnb, eNR_NBKERNEL_FREE_ENERGY, nlist->nri * 12 + nlist->jindex[nri] * 150);
 
-    if (false && /* FEP HREX */ numExcludedPairsBeyondRlist > 0)
+    if (numExcludedPairsBeyondRlist > 0)
     {
         /* FEP HREX
         In RBFE calculation, exclusions are added between dummy atoms of A and B ligands.
